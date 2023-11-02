@@ -3,11 +3,27 @@
 
 #include<stddef.h>
 #include<stdint.h>
+#include<stdlib.h>
+#include<stdio.h>
 
 #define CLN_MAX_NUMID       255
 #define CLN_RETURN_ID       0
 #define CLN_SELF_ID         1
 
+
+// -*-
+inline void* cln_alloc(size_t size){
+    void* ptr = calloc(1, size);
+    if(ptr==NULL){
+        fprintf(stderr, "CelineError: memory allocation failure\n");
+        exit(EXIT_FAILURE);        
+    }
+    return ptr;
+}
+
+// -*-----------------------------------------------------------------*-
+// -*- Symtable -> (IDTable)                                         -*-
+// -*-----------------------------------------------------------------*-
 // -*- IDTable
 typedef struct{
     char* symbols[CLN_MAX_NUMID];
