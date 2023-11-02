@@ -14,4 +14,15 @@ Symtable* cln_new_symtable(){
     return symtable;
 }
 
-uint32_t cln_get_symbol_index(const Symtable* table, const char* symbol);
+// -*-
+uint32_t cln_get_symbol_index(Symtable* table, const char* symbol){
+    for(uint32_t idx=0; idx < table->len; ++idx){
+        if(strcmp(symbol, table->symbols[idx])==0){
+            return idx;
+        }
+    }
+    uint32_t index = table->len;
+    table->symbols[index] = strdup(symbol);
+    table->len++;
+    return index;
+}

@@ -41,6 +41,6 @@ typedef struct{
 
 // -*-
 Symtable* cln_new_symtable();
-uint32_t cln_get_symbol_index(const Symtable* table, const char* symbol);
+uint32_t cln_get_symbol_index(Symtable* table, const char* symbol);
 
 #endif
