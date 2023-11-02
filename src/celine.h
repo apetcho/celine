@@ -35,7 +35,7 @@ inline void cln_dealloc(void *ptr){
 // -*- IDTable
 typedef struct{
     char* symbols[CLN_MAX_NUMID];
-    uint32_t nsymbol;               // count
+    uint32_t len;               // count
 } Symtable;
 
 
