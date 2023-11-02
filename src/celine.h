@@ -21,6 +21,14 @@ inline void* cln_alloc(size_t size){
     return ptr;
 }
 
+// -*-
+inline void cln_dealloc(void *ptr){
+    if(ptr){
+        free(ptr);
+    }
+    ptr = NULL;
+}
+
 // -*-----------------------------------------------------------------*-
 // -*- Symtable -> (IDTable)                                         -*-
 // -*-----------------------------------------------------------------*-
