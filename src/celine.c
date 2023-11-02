@@ -9,7 +9,9 @@
 // -*-----------------------------------------------------------------*-
 // -
 void cln_checktype(Object *obj, enum Type type){
-    
+    if(obj->type != type){
+        cln_panic("TypeError: expected %d, got %d\n", type, obj->type);
+    }
 }
 
 
