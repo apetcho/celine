@@ -196,8 +196,13 @@ static void _cln_read_symbol_tillws(Lexer *lexer){
     _cln_read_symbol(lexer, _cln_is_ident_symbol);
 }
 
-// is_not_string_end()
 // read_string_literal()
+static void _cln_read_string_literal(Lexer *lexer){
+    _cln_read_symbol(lexer, _cln_is_not_string_end);
+}
+
+
+
 // get_keyword_token()
 Token cln_lexer_nextoken(Lexer *lexer);
 void cln_lexer_destroy(Lexer *lexer);
