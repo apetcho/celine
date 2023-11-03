@@ -373,5 +373,12 @@ static char* _cln_find_module(const char* name){
     return strdup(moduleFilename);
 }
 
-Ast* cln_module_import(const char* name, Symtable* symtable);
+// -*-
+Ast* cln_module_import(const char* name, Symtable* symtable){
+    char* modulePath = _cln_find_module(name);
+    // 
+    printf("Found module %s at %s\n", name, modulePath);
+    return cln_parse(modulePath, symtable);
+}
+
 void cln_module_load(const char* name, Symtable *symbtable, Env *env);
