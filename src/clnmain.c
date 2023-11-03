@@ -69,7 +69,12 @@ static Object** _cln_resolve_index(Ast *ast, Env *env, Symtable *symtable){
 }
 
 // -*- void _cln_eval_set_field()
-static void _cln_eval_set_field(Ast *ast, Env *env, Object *obj);
+static void _cln_eval_set_field(Ast *ast, Env *env, Object *obj){
+    int i = ast->obj->val.integer;
+    Object *self = cln_env_get(env, i);
+    cln_checktype(ast->node->obj, TY_STRING);
+    cln_set_field(self, ast->node->obj->val.cstr, obj);
+}
 
 // -*- Object* _cln_eval_get_field()
 static Object* _cln_eval_get_field(Ast *ast, Env *env);
