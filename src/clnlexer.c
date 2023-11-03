@@ -177,6 +177,10 @@ static void _cln_read_symbol(Lexer *lexer, bool (*testfn)(char)){
 }
 
 // is_ident_symbol()
+static bool _cln_is_ident_symbol(char c){
+    return isalnum(c) || c == '_';
+}
+
 // ::is_number()
 // read_ident()
 // is_not_string_end()
