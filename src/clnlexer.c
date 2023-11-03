@@ -186,6 +186,11 @@ static bool _cln_is_number_symbol(char c){
     return isdigit(c) || c == '.' || c == 'e' || c == '+' || c == '-';
 }
 
+// -*-
+static bool _cln_is_not_string_end(char c){
+    return c != '\"';
+}
+
 // read_ident()
 // is_not_string_end()
 // read_string_literal()
