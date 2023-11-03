@@ -76,7 +76,14 @@ Object* cln_new_integer(long num){
     return self;
 }
 
-Object* cln_new_float(double num);
+// -*-
+Object* cln_new_float(double num){
+    Object *self = cln_new();
+    self->type = TY_FLOAT;
+    self->val.real = num;
+    return self;
+}
+
 Object* cln_new_string(char *cstr);
 Object* cln_new_builtin(int *args, int narg, Ast *code);
 Object* cln_new_array(size_t len);
