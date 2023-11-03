@@ -125,6 +125,18 @@ uint32_t cln_hash(const char* cstr, size_t tableLen){
     return result;
 }
 
+// -*-
+int _cln_get_field_index(Object *self, const char* fieldname){
+    uint32_t index = cln_hash(fieldname, self->ftcap);
+    while(self->fields[index] && strcmp(self->fields[index]->name, fieldname)!=0){
+        ++index;
+        if(index >= self->ftcap){
+            index = 0;
+        }
+    }
+    return index;
+}
+
 void cln_set_field(Object *self, const char* name, Object *obj);
 Object* cln_get_field(Object *self, const char* name);
 Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
