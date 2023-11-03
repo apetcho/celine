@@ -193,7 +193,33 @@ static Ast* _cln_parse_field(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_assign(Parser *parser);
+// -*-
+static Ast* _cln_parse_assign(Parser *parser){
+    Ast *lhs = NULL;
+    enum AstKind akind = AST_ASSIGN;
+    if(parser->currentToken.tkind == TOK_LOCAL){ // local
+        _cln_match(parser, TOK_LOCAL);
+        akind = AST_LOCAL;
+    }
+
+    if(parser->nextToken.tkind == TOK_LSBRACKET){ // ident[
+        lhs = _cln_parse_array_indexing(parser);
+    }else if(parser->nextToken.tkind == TOK_DOT){ // ident.
+        lhs = _cln_parse_field(parser);
+    }else{ // ident
+        Object *ident = _cln_match(parser, TOK_IDENT);
+        lhs = cln_new_ast(AST_IDENT, ident);
+    }
+    // lhs =
+    _cln_match(parser, TOK_ASSIGN);
+    // [local] (ident\.?\[?idx\]?) = expr
+    Ast *expr = _cln_parse_expr(parser);
+    Ast *ast = cln_new_ast(akind, CLN_NONE);
+    cln_ast_add_node(ast, lhs);
+    cln_ast_add_node(ast, expr);
+    return ast;
+}
+
 // static Ast* _cln_parse_print(Parser *parser);
 // static Ast* _cln_parse_def(Parser *parser);
 // static Ast* _cln_parse_while(Parser *parser);
