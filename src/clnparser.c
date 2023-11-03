@@ -223,15 +223,34 @@ static Ast* _cln_parse_assign(Parser *parser){
 // -*- print '(' expr ')'
 static Ast* _cln_parse_print(Parser *parser){
     _cln_match(parser, TOK_PRINT);          // print
-    _cln_match(parser, TOK_LBRACE);         // (
+    _cln_match(parser, TOK_LPAREN);         // (
     Ast *expr = _cln_parse_expr(parser);    // expr
-    _cln_match(parser, TOK_RBRACE);         // )
+    _cln_match(parser, TOK_RPAREN);         // )
     Ast *ast = cln_new_ast(AST_PRINT, CLN_NONE);
     ast->node = expr;
     return ast;
 }
 
-// static Ast* _cln_parse_def(Parser *parser);
+// -*- def name(arglist){...}
+static Ast* _cln_parse_def(Parser *parser){
+    _cln_match(parser, TOK_DEF);
+    Object *name = NULL;
+    if(parser->currentToken.tkind == TOK_IDENT){
+        name = _cln_match(parser, TOK_IDENT);
+    }
+    // name == NULL -> anonymous
+    // name != NULL -> named function
+    Ast *fun = cln_new_ast(AST_DEF, name);      // fname
+    _cln_match(parser, TOK_LPAREN);             // (
+    Ast *arglist = _cln_parse_arglist(parser);  // args
+    _cln_match(parser, TOK_RPAREN);             // )
+    Ast *body = _cln_parse_block(parser);       // { body }
+
+    cln_ast_add_node(fun, arglist);
+    cln_ast_add_node(fun, body);
+    return fun;
+}
+
 // static Ast* _cln_parse_while(Parser *parser);
 // static Ast* _cln_parse_condition(Parser *parser);
 // static Ast* _cln_parse_logical_expr(Parser *parser);
