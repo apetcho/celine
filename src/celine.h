@@ -313,5 +313,9 @@ Token cln_lexer_nexttoken(Lexer *lexer);
 // -*---------------------------------------------------------------*-
 Ast* cln_parse(const char* filename, Symtable *symtable);
 
+// -*---------------------------------------------------------------*-
+// -*- Parser                                                      -*-
+// -*---------------------------------------------------------------*-
+void cln_eval(Ast *ast, Env *env, Symtable *symtable);
 
 #endif
