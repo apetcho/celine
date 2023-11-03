@@ -188,7 +188,7 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto){
     }
 
     if(checkproto){
-        Object *proto = cln_get_field_generic(self, CLN_PROTOTYPE, 0);
+        Object *proto = cln_get_field_generic(self, CLN_PROTOTYPE, false);
         if(proto){
             return cln_get_field_generic(proto, name, checkproto);
         }
@@ -197,4 +197,7 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto){
     return NULL;
 }
 
-Object* cln_get_field(Object *self, const char* name);
+// -*-
+Object* cln_get_field(Object *self, const char* name){
+    return cln_get_field_generic(self, name, true);
+}
