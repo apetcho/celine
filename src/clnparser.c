@@ -25,6 +25,13 @@ void _cln_fail_with_parsing_error(const char *message){
 }
 
 // advance()
+static void _cln_advance(Parser *parser){
+    parser->currentToken = parser->nextToken;
+    if(parser->currentToken.tkind != TOK_EOF){
+        parser->nextToken = cln_lexer_nexttoken(parser->lexer);
+    }
+}
+
 // match()
 // 
 
