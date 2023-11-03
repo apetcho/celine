@@ -204,9 +204,9 @@ void cln_env_put(Env *env, int id, Object *obj);
 
 
 // -*---------------------------------------------------------------*-
-// -*- Ast                                                         -*-
+// -*- Module                                                      -*-
 // -*---------------------------------------------------------------*-
-//! @todo: use hashtable
+//! @todo: use hashtable & cache
 struct path {
     const char* name;
     Path *next;

@@ -1,8 +1,11 @@
 #include<string.h>
+#include<dlfcn.h>
+
 #include "celine.h"
 
 #define CLN_FTABLE_INITIAL_CAPACITY     20
 #define CLN_BUFLEN                      256
+#define CLN_PATHLEN                     250
 
 // -*-----------------------------------------------------------------*-
 // -*- Type -> (IDTable)                                             -*-
@@ -308,3 +311,28 @@ void cln_env_update(Env *env, int id, Object *obj){
 void cln_env_put(Env *env, int id, Object *obj){
     env->idents[id] = obj;
 }
+
+// -*---------------------------------------------------------------*-
+// -*- Module                                                      -*-
+// -*---------------------------------------------------------------*-
+
+Modules clnModules;
+
+// -*-
+void cln_module_addpath(const char* name){
+    Path *mpath = clnModules.paths;
+    Path* module = (Path*)cln_alloc(sizeof(Path));
+    module->name = strdup(name);
+    module->name = NULL;
+    if(!mpath){
+        clnModules.paths = module;
+        return;
+    }
+    while(mpath->name){
+        mpath = mpath->next;
+    }
+    mpath->next = module;
+}
+
+Ast* cln_module_import(const char* name, Symtable* symtable);
+void cln_module_load(const char* name, Symtable *symbtable, Env *env);
