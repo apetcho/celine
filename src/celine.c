@@ -258,4 +258,6 @@ static void _cln_dump_with_indent(Ast *ast, uint32_t indent){
 }
 
 // -*-
-void cln_dump(Ast *ast);
+void cln_dump(Ast *ast){
+    _cln_dump_with_indent(ast, 0);
+}
