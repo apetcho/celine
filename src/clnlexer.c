@@ -157,6 +157,10 @@ static void _cln_skip_whitespace(Lexer *lexer){
 }
 
 // clear_(token|tokenBuffer)()
+static void _cln_clear_token(Lexer *lexer){
+    memset(lexer->token, '\0', sizeof(char)*CLN_MAX_TOKLEN);
+}
+
 // readSymbols()
 // is_ident_symbol()
 // ::is_number()
