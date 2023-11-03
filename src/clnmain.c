@@ -334,4 +334,8 @@ static void _cln_eval_statement(Ast *ast, Env *env, Symtable *symtable){
 }
 
 // -*-
-void cln_eval(Ast *ast, Env *env, Symtable *symtable);
+void cln_eval(Ast *ast, Env *env, Symtable *symtable){
+    for(Ast *node=ast; node; node = node->next){
+        _cln_eval_statement(node, env, symtable);
+    }
+}
