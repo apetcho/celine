@@ -334,5 +334,15 @@ void cln_module_addpath(const char* name){
     mpath->next = module;
 }
 
+// -*-
+bool _cln_path_exists(const char* fname){
+    FILE *stream = fopen(fname, "r");
+    if(!stream){
+        return false;
+    }
+    fclose(stream);
+    return true;
+}
+
 Ast* cln_module_import(const char* name, Symtable* symtable);
 void cln_module_load(const char* name, Symtable *symbtable, Env *env);
