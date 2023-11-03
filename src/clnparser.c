@@ -4,11 +4,21 @@
 typedef struct {
     const char *filename;
     Lexer *lexer;
-    Token currentTokend;
+    Token currentToken;
     Token nextToken;
 } Parser;
 
 // fail_with_unexpected_token()
+static void _cln_fail_with_unexpected_token(Parser *parser, int got, int needed){
+    fprintf(
+        stderr,
+        "CelineError: unexpected token at line %s:%d: \"%s\", needed \"%s\"\n",
+        parser->filename, parser->currentToken.lineno,
+        clnTokenNames[got], clnTokenNames[needed]
+    );
+    exit(EXIT_FAILURE);
+}
+
 // fail_with_parsing_error()
 // advance()
 // match()
