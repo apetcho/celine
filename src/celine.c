@@ -114,7 +114,17 @@ Object* cln_new_array(size_t len){
     return self;
 }
 
-uint32_t cln_hash(const char* cstr, size_t tableLen);
+// -*-
+uint32_t cln_hash(const char* cstr, size_t tableLen){
+    size_t len = strlen(cstr);
+    uint32_t result = 0;
+    for(int i=0; i < len; ++i){
+        result = (result * 31 + cstr[i]) % tableLen;
+    }
+
+    return result;
+}
+
 void cln_set_field(Object *self, const char* name, Object *obj);
 Object* cln_get_field(Object *self, const char* name);
 Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
