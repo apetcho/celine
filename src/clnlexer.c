@@ -141,6 +141,21 @@ static void _cln_advance_pos(Lexer *lexer){
 }
 
 // skip_whitespace()
+static void _cln_skip_whitespace(Lexer *lexer){
+    bool comment = false;
+    char c;
+    while((c=_cln_nextchar(lexer)) && (isspace(c)||c==CLN_COMMENT || comment)){
+        if(c==CLN_COMMENT){
+            comment = true;
+        }
+        if(c=='\n'){
+            ++lexer->lineno;
+            comment = false;
+        }
+        _cln_advance_pos(lexer);
+    }
+}
+
 // clear_(token|tokenBuffer)()
 // readSymbols()
 // is_ident_symbol()
