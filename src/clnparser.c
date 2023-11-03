@@ -63,7 +63,7 @@ static Ast* _cln_parse_call(Parser *parser);
 
 static Ast* _cln_parse_arglist(Parser *parser);
 static Ast* _cln_parse_expr(Parser *parser);
-static Ast* _cln_parse_artith_expr(Parser *parser);
+static Ast* _cln_parse_arith_expr(Parser *parser);
 static Ast* _cln_parse_term(Parser *parser);
 static Ast* _cln_parse_value(Parser *parser);
 static Ast* _cln_parse_print(Parser *parser);
@@ -369,8 +369,31 @@ static Ast* _cln_parse_arglist(Parser *parser){
     return args;
 }
 
-// static Ast* _cln_parse_expr(Parser *parser);
-// static Ast* _cln_parse_artith_expr(Parser *parser);
+// -*-
+static Ast* _cln_parse_expr(Parser *parser){
+    switch(parser->currentToken.tkind){
+    case TOK_READ_INT:
+        _cln_match(parser, TOK_READ_INT);
+        return cln_new_ast(AST_READ_INT, CLN_NONE);
+    case TOK_INPUT:
+        _cln_match(parser, TOK_INPUT);
+        return cln_new_ast(AST_INPUT, CLN_NONE);
+    case TOK_ARRAY:
+        return _cln_parse_array(parser);
+    case TOK_OBJECT:
+    case TOK_NEW:
+        return _cln_parse_object(parser);
+    case TOK_DEF:
+        return _cln_parse_def(parser);
+    default:
+        return _cln_parse_arith_expr(parser);
+    }
+    // -*-
+    cln_panic("CelineError: runtime error");
+    return NULL;
+}
+
+// static Ast* _cln_parse_arith_expr(Parser *parser);
 // static Ast* _cln_parse_term(Parser *parser);
 // static Ast* _cln_parse_value(Parser *parser);
 // static Ast* _cln_parse_return(Parser *parser);

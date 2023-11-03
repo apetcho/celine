@@ -128,39 +128,40 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
 // -*- Ast                                                         -*-
 // -*---------------------------------------------------------------*-
 
-#define CLN_AST_NODES           \
-    CLN_DEF(ASSIGN, "=")        \
-    CLN_DEF(IDENT, "ident")     \
-    CLN_DEF(INTEGER, "integer") \
-    CLN_DEF(FLOAT, "float")     \
-    CLN_DEF(ADD, "+")           \
-    CLN_DEF(SUB, "-")           \
-    CLN_DEF(MUL, "*")           \
-    CLN_DEF(DIV, "/")           \
-    CLN_DEF(WHILE, "while")     \
-    CLN_DEF(IF, "if")           \
-    CLN_DEF(CALL, "call")       \
-    CLN_DEF(AND, "and")         \
-    CLN_DEF(OR, "or")           \
-    CLN_DEF(NOT, "not")         \
-    CLN_DEF(LT, "<")            \
-    CLN_DEF(EQ, "==")           \
-    CLN_DEF(GT, ">")            \
-    CLN_DEF(LE, "<=")           \
-    CLN_DEF(GE, ">=")           \
-    CLN_DEF(PRINT, "print")     \
-    CLN_DEF(INPUT, "input")     \
-    CLN_DEF(DEF, "def")         \
-    CLN_DEF(LOCAL, "local")     \
-    CLN_DEF(RETURN, "return")   \
-    CLN_DEF(ARRAY, "array")     \
-    CLN_DEF(INDEX, "[]")        \
-    CLN_DEF(FIELD, "field")     \
-    CLN_DEF(MCALL, "mcall")     \
-    CLN_DEF(OBJECT, "object")   \
-    CLN_DEF(IMPORT, "import")   \
-    CLN_DEF(NEW, "new")         \
-    CLN_DEF(LOAD, "load")       \
+#define CLN_AST_NODES               \
+    CLN_DEF(ASSIGN, "=")            \
+    CLN_DEF(IDENT, "ident")         \
+    CLN_DEF(INTEGER, "integer")     \
+    CLN_DEF(FLOAT, "float")         \
+    CLN_DEF(ADD, "+")               \
+    CLN_DEF(SUB, "-")               \
+    CLN_DEF(MUL, "*")               \
+    CLN_DEF(DIV, "/")               \
+    CLN_DEF(WHILE, "while")         \
+    CLN_DEF(IF, "if")               \
+    CLN_DEF(CALL, "call")           \
+    CLN_DEF(AND, "and")             \
+    CLN_DEF(OR, "or")               \
+    CLN_DEF(NOT, "not")             \
+    CLN_DEF(LT, "<")                \
+    CLN_DEF(EQ, "==")               \
+    CLN_DEF(GT, ">")                \
+    CLN_DEF(LE, "<=")               \
+    CLN_DEF(GE, ">=")               \
+    CLN_DEF(PRINT, "print")         \
+    CLN_DEF(READ_INT, "readInt")    \
+    CLN_DEF(INPUT, "input")         \
+    CLN_DEF(DEF, "def")             \
+    CLN_DEF(LOCAL, "local")         \
+    CLN_DEF(RETURN, "return")       \
+    CLN_DEF(ARRAY, "array")         \
+    CLN_DEF(INDEX, "[]")            \
+    CLN_DEF(FIELD, "field")         \
+    CLN_DEF(MCALL, "mcall")         \
+    CLN_DEF(OBJECT, "object")       \
+    CLN_DEF(IMPORT, "import")       \
+    CLN_DEF(NEW, "new")             \
+    CLN_DEF(LOAD, "load")           \
     CLN_DEF(EMPTY, "@empty")
 
 // -*-
