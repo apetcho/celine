@@ -19,7 +19,7 @@
 #define CLN_COMMENT             '#'
 
 // -*-
-inline void* cln_alloc(size_t size){
+static inline void* cln_alloc(size_t size){
     void* ptr = calloc(1, size);
     if(ptr==NULL){
         fprintf(stderr, "CelineError: memory allocation failure\n");
@@ -29,7 +29,7 @@ inline void* cln_alloc(size_t size){
 }
 
 // -*-
-inline void cln_dealloc(void *ptr){
+static inline void cln_dealloc(void *ptr){
     if(ptr){
         free(ptr);
     }
@@ -37,7 +37,7 @@ inline void cln_dealloc(void *ptr){
 }
 
 // -*-
-inline void cln_panic(const char* fmt, ...){
+static inline void cln_panic(const char* fmt, ...){
     va_list args;
     va_start(args, fmt);
     vfprintf(stderr, fmt, args);
