@@ -83,3 +83,15 @@ Ast* cln_parse(const char* filename, Symtable *symtable){
     cln_dealloc(parser.lexer);
     return ast;
 }
+
+// -*-
+/*
+expr | statement
+expr | statement
+....
+*/
+static Ast* _cln_parse_program(Parser *parser){
+    parser->nextToken = cln_lexer_nexttoken(parser->lexer);
+    _cln_advance(parser);
+    return _cln_parse_oplist(parser);
+}
