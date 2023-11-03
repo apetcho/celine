@@ -251,7 +251,21 @@ static Ast* _cln_parse_def(Parser *parser){
     return fun;
 }
 
-// static Ast* _cln_parse_while(Parser *parser);
+// -*- while '(' cond ')' { body }
+static Ast* _cln_parse_while(Parser *parser){
+    _cln_match(parser, TOK_WHILE);
+    Ast *ast = cln_new_ast(AST_WHILE, CLN_NONE);        // while
+    _cln_match(parser, TOK_LPAREN);                     // (
+    Ast *cond = _cln_parse_condition(parser);           // cond
+    _cln_match(parser, TOK_RPAREN);                     // )
+    //! @note: change from parse_op() to parse_block()
+    Ast* body = _cln_parse_block(parser);               // { body }
+    cln_ast_add_node(ast, cond);
+    cln_ast_add_node(ast, body);
+
+    return ast; 
+}
+
 // static Ast* _cln_parse_condition(Parser *parser);
 // static Ast* _cln_parse_logical_expr(Parser *parser);
 // static Ast* _cln_parse_call(Parser *parser);
