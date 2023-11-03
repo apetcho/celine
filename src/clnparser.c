@@ -432,7 +432,58 @@ static Ast* _cln_parse_term(Parser *parser){
     return val;
 }
 
-// static Ast* _cln_parse_value(Parser *parser);
+// -*-
+//! @todo: change this parse_atom()
+static Ast* _cln_parse_value(Parser *parser){
+    Ast *ast;
+    bool isAtom = (
+        parser->currentToken.tkind==TOK_INTEGER ||
+        parser->currentToken.tkind==TOK_FLOAT ||
+        parser->currentToken.tkind==TOK_STRING
+    );
+    if(isAtom){
+        if(parser->currentToken.tkind==TOK_INTEGER){
+            ast = cln_new_ast(AST_INTEGER, parser->currentToken.obj);
+        }else if(parser->currentToken.tkind==TOK_FLOAT){
+            ast = cln_new_ast(AST_FLOAT, parser->currentToken.obj);
+        }else{
+            ast = cln_new_ast(AST_STRING, parser->currentToken.obj);
+        }
+        _cln_match(parser, parser->currentToken.tkind);
+    }else{
+        if(parser->nextToken.tkind==TOK_LPAREN){
+            return _cln_parse_call(parser);
+        }
+        Object *ident = _cln_match(parser, TOK_IDENT);
+        if(parser->currentToken.tkind==TOK_LSBRACKET){
+            _cln_match(parser, TOK_LSBRACKET);
+            Ast* idxExpr = _cln_parse_expr(parser);
+            _cln_match(parser, TOK_RSBRACKET);
+            ast = cln_new_ast(AST_INDEX, ident);
+            cln_ast_add_node(ast, idxExpr);
+        }else if(parser->currentToken.tkind==TOK_DOT){
+            _cln_match(parser, TOK_DOT);
+            Object *field = _cln_match(parser, TOK_FIELD);
+            if(parser->currentToken.tkind==TOK_LPAREN){
+                ast = cln_new_ast(AST_MCALL, CLN_NONE);
+                Ast *fieldIdent = cln_new_ast(AST_FIELD, ident);
+                cln_ast_add_node(fieldIdent, cln_new_ast(AST_IDENT, field));
+                cln_ast_add_node(ast, fieldIdent);
+                _cln_match(parser, TOK_LPAREN);
+                cln_ast_add_node(ast, _cln_parse_arglist(parser));
+                _cln_match(parser, TOK_RPAREN);
+            }else{
+                ast = cln_new_ast(AST_FIELD, ident);
+                cln_ast_add_node(ast, cln_new_ast(AST_IDENT, field));
+            }
+        }else{
+            ast = cln_new_ast(AST_IDENT, ident);
+        }
+    }
+
+    return ast;
+}
+
 // static Ast* _cln_parse_return(Parser *parser);
 // static Ast* _cln_parse_array(Parser *parser);
 // static Ast* _cln_parse_object(Parser *parser);

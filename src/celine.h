@@ -151,6 +151,7 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
     CLN_DEF(PRINT, "print")         \
     CLN_DEF(READ_INT, "readInt")    \
     CLN_DEF(INPUT, "input")         \
+    CLN_DEF(STRING, "string")       \
     CLN_DEF(DEF, "def")             \
     CLN_DEF(LOCAL, "local")         \
     CLN_DEF(RETURN, "return")       \
