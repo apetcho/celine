@@ -84,7 +84,14 @@ Object* cln_new_float(double num){
     return self;
 }
 
-Object* cln_new_string(char *cstr);
+// -*-
+Object* cln_new_string(char *cstr){
+    Object *self = cln_new();
+    self->type = TY_STRING;
+    self->val.cstr = cstr;
+    return self;
+}
+
 Object* cln_new_builtin(int *args, int narg, Ast *code);
 Object* cln_new_array(size_t len);
 uint32_t cln_hash(const char* cstr, size_t tableLen);
