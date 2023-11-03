@@ -201,7 +201,10 @@ static void _cln_read_string_literal(Lexer *lexer){
     _cln_read_symbol(lexer, _cln_is_not_string_end);
 }
 
-
+// read_number_literal()
+static void _cln_read_number_literal(Lexer *lexer){
+    _cln_read_symbol(lexer, _cln_is_number_symbol);
+}
 
 // get_keyword_token()
 Token cln_lexer_nextoken(Lexer *lexer);
