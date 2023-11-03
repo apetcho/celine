@@ -48,7 +48,7 @@ const char* clnKeywords[] = {
     "new", "load"
 };
 
-enum TokenKind keywordsKind[] = {
+enum TokenKind clnKeywordsKind[] = {
     TOK_AND, TOK_OR, TOK_NOT,
     TOK_WHILE, TOK_IF, TOK_ELSE,
     TOK_CALL, TOK_PRINT, TOK_READ_INT,
@@ -207,6 +207,16 @@ static void _cln_read_number_literal(Lexer *lexer){
 }
 
 // get_keyword_token()
+enum TokenKind _cln_get_keyword_token(char *cstr){
+    size_t len = CLN_ARRAYLEN(clnKeywords);
+    for(size_t i=0; i < len; ++i){
+        if(strcmp(clnKeywords[i], cstr)==0){
+            return clnKeywordsKind[i];
+        }
+    }
+    return TOK_UNKNOWN;
+}
+
 Token cln_lexer_nextoken(Lexer *lexer);
 void cln_lexer_destroy(Lexer *lexer);
 // bool cln_lexer_has_nextotken(Lexer *lexer);

@@ -227,7 +227,7 @@ void cln_module_load(const char* name, Symtable *symbtable, Env *env);
 // -*- Ast                                                         -*-
 // -*---------------------------------------------------------------*-
 #define CLN_TOKENS                  \
-    CLN_DEF(INVALID, "invalid")     \
+    CLN_DEF(UNKNOWN, "unknown")     \
     CLN_DEF(LBRACE, "{")            \
     CLN_DEF(RBRACE, "}")            \
     CLN_DEF(IDENT, "ident")         \
