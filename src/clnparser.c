@@ -266,7 +266,31 @@ static Ast* _cln_parse_while(Parser *parser){
     return ast; 
 }
 
-// static Ast* _cln_parse_condition(Parser *parser);
+// -*- not expr
+static Ast* _cln_parse_condition(Parser *parser){
+    if(parser->currentToken.tkind == TOK_NOT){
+        Ast *cond = cln_new_ast(AST_NOT, CLN_NONE);
+        _cln_match(parser, TOK_NOT);
+        cln_ast_add_node(cond, _cln_parse_logical_expr(parser));
+        return cond;
+    }else{ // lhs op rhs
+        Ast *lhs = _cln_parse_logical_expr(parser);
+        enum TokenKind kind = parser->currentToken.tkind;
+        Ast *rhs;
+        if(kind == TOK_AND || kind == TOK_OR){
+            _cln_match(parser, kind);
+            rhs = _cln_parse_condition(parser);
+            Ast *cond = cln_new_ast(
+                kind == TOK_AND ? AST_AND : AST_OR, CLN_NONE
+            );
+            cln_ast_add_node(cond, lhs);
+            cln_ast_add_node(cond, rhs);
+            return cond;
+        }
+        return lhs;
+    }
+}
+
 // static Ast* _cln_parse_logical_expr(Parser *parser);
 // static Ast* _cln_parse_call(Parser *parser);
 // static Ast* _cln_parse_arglist(Parser *parser);
