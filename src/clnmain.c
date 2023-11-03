@@ -52,7 +52,21 @@ static Object* _cln_eval_call(Env* env, Object *fun, Ast* arglist, Object *owner
 }
 
 // -*- Object** _cln_resolve_index()
-static Object** _cln_resolve_index(Ast *ast, Env *env, Symtable *symtable);
+static Object** _cln_resolve_index(Ast *ast, Env *env, Symtable *symtable){
+    int i = ast->obj->val.integer;
+    Object *index = _cln_eval_expr(ast->node, env, symtable);
+    cln_checktype(index, TY_INTEGER);
+    Object* self = cln_env_get(env, i);
+    cln_checktype(self, TY_ARRAY);
+    if(index->val.integer >= self->val.array.len){
+        cln_panic(
+            "Array index out of bounds: %d out of %d\n",
+            index->val.integer, self->val.array.len
+        );
+    }
+
+    return &self->val.array.data[index->val.integer];
+}
 
 // -*- void _cln_eval_set_field()
 static void _cln_eval_set_field(Ast *ast, Env *env, Object *obj);
