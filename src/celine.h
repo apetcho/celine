@@ -77,7 +77,7 @@ enum Type{
     TY_FLOAT,           // <extension>
     TY_STRING,
     TY_ARRAY,
-    TY_BUILTIN,         // <FUN>
+    TY_FUN,             // <FUN>
     TY_OBJECT,
     TY_CFUN,            // <Foreign Function>
 };

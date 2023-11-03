@@ -1,4 +1,4 @@
-
+#include<string.h>
 #include "celine.h"
 
 #define CLN_FIELDS_TABLE_INITIAL_SIZE   20
@@ -14,8 +14,51 @@ void cln_checktype(Object *obj, enum Type type){
     }
 }
 
+// -*-
+char* cln_toString(const Object *self){
+    char *buffer;
+    int rc;
+    buffer = cln_alloc(sizeof(char)*CLN_BUFLEN);
+    switch(self->type){
+    case TY_INTEGER:
+        rc = sprintf(buffer, "%ld", self->val.integer);
+        if(rc < 0){
+            cln_panic("ValueError: unable to convert %ld to a string\n", self->val.integer);
+        }
+        break;
+    case TY_FLOAT:
+        rc = sprintf(buffer, "%lg", self->val.real);
+        if(rc < 0){
+            cln_panic("ValueError: unable to convert %lg to a string\n", self->val.real);
+        }
+        break;
+    case TY_STRING:
+        if(strlen(self->val.cstr) >= CLN_BUFLEN){
+            cln_panic(
+                "Too long string to output: '%s', maximum buffer size is %d\n",
+                self->val.cstr, CLN_BUFLEN
+            );
+        }
+        strcpy(buffer, self->val.cstr);
+        break;
+    case TY_ARRAY:
+        strcpy(buffer, "[array]");
+        break;
+    case TY_FUN:
+        strcpy(buffer, "[function]");
+        break;
+    case TY_OBJECT:     // [EXTENSION]
+        strcpy(buffer, "[object]");
+        break;
+    default:
+        cln_panic("Invalid data type: %d\n", self->type);
+        break;
+    }
 
-char* cln_toString(const Object *self);
+    return buffer;
+}
+
+// -*-
 Object* cln_new_integer(long num);
 Object* cln_new_float(double num);
 Object* cln_new_string(char *cstr);
