@@ -192,6 +192,10 @@ static bool _cln_is_not_string_end(char c){
 }
 
 // read_ident()
+static void _cln_read_symbol_tillws(Lexer *lexer){
+    _cln_read_symbol(lexer, _cln_is_ident_symbol);
+}
+
 // is_not_string_end()
 // read_string_literal()
 // get_keyword_token()
