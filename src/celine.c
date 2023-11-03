@@ -126,7 +126,7 @@ uint32_t cln_hash(const char* cstr, size_t tableLen){
 }
 
 // -*-
-int _cln_get_field_index(Object *self, const char* fieldname){
+static uint32_t _cln_get_field_index(Object *self, const char* fieldname){
     uint32_t index = cln_hash(fieldname, self->ftcap);
     while(self->fields[index] && strcmp(self->fields[index]->name, fieldname)!=0){
         ++index;
@@ -135,6 +135,26 @@ int _cln_get_field_index(Object *self, const char* fieldname){
         }
     }
     return index;
+}
+
+// -
+static void _cln_reshash(Object *self){
+    size_t cap = self->ftcap;
+    self->ftcap *= 2;
+    Field **fields = self->fields;
+    self->fields = (Field**)cln_alloc(sizeof(Field*)*self->ftcap);
+    memset(self->fields, 0, sizeof(Field*)*self->ftcap);
+    self->nfield = 0;
+    uint32_t hash;
+    Field *field;
+    for(size_t i=0; i < cap; ++i){
+        field = fields[i];
+        if(field){
+            cln_set_field(self, field->name, field->obj);
+            cln_dealloc(field);
+        }
+    }
+    cln_dealloc(fields);
 }
 
 void cln_set_field(Object *self, const char* name, Object *obj);
