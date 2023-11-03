@@ -114,6 +114,10 @@ void cln_lexer_init(Lexer *lexer, const char *filename, Symtable *symtable){
 }
 
 // nextchar()
+static char _cln_nextchar(Lexer *lexer){
+    return lexer->buffer[lexer->pos];
+}
+
 // nextchar_and_advance()
 // advance_(head|pos)()
 // skip_whitespace()
