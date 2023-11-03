@@ -381,4 +381,26 @@ Ast* cln_module_import(const char* name, Symtable* symtable){
     return cln_parse(modulePath, symtable);
 }
 
-void cln_module_load(const char* name, Symtable *symbtable, Env *env);
+// -*-
+void cln_module_load(const char* name, Symtable *symbtable, Env *env){
+    char* modulePath = _cln_find_module(name);
+    void *handle = dlopen(modulePath, RTLD_LAZY);
+    if(!handle){
+        cln_panic(
+            "CelineError: failed to load module: %s: %s\n",
+            modulePath, dlerror()
+        );
+    }
+
+    // -
+    InitModuleFn initfn = dlsym(handle, "init");
+    char *emsg = dlerror();
+    if(emsg){
+        cln_panic(
+            "CelineError: failed to load module %s: %s\n",
+            modulePath, emsg
+        );
+    }
+    initfn(symbtable, env);
+    cln_dealloc(modulePath);
+}
