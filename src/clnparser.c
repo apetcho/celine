@@ -52,11 +52,16 @@ static Ast* _cln_parse_block(Parser *parser);
 static Ast* _cln_parse_condition(Parser *parser);
 static Ast* _cln_parse_logical_expr(Parser *parser);
 static Ast* _cln_parse_op(Parser *parser);
+
+static Ast* _cln_parse_array_indexing(Parser *parser);
+static Ast* _cln_parse_field(Parser *parser);
+
 static Ast* _cln_parse_assign(Parser *parser);
 static Ast* _cln_parse_while(Parser *parser);
 static Ast* _cln_parse_if(Parser *parser);
 static Ast* _cln_parse_call(Parser *parser);
-static Ast* _cln_parse_arglis(Parser *parser);
+
+static Ast* _cln_parse_arglist(Parser *parser);
 static Ast* _cln_parse_expr(Parser *parser);
 static Ast* _cln_parse_artith_expr(Parser *parser);
 static Ast* _cln_parse_term(Parser *parser);
@@ -64,10 +69,12 @@ static Ast* _cln_parse_value(Parser *parser);
 static Ast* _cln_parse_print(Parser *parser);
 static Ast* _cln_parse_def(Parser *parser);
 static Ast* _cln_parse_return(Parser *parser);
-static Ast* _cln_parse_array(Parser *parser);
-static Ast* _cln_parse_object(Parser *parser);
 static Ast* _cln_parse_import(Parser *parser);
 static Ast* _cln_parse_load(Parser *parser);
+
+static Ast* _cln_parse_array(Parser *parser);
+static Ast* _cln_parse_object(Parser *parser);
+
 
 // -*-
 Ast* cln_parse(const char* filename, Symtable *symtable){
@@ -146,6 +153,8 @@ static Ast* _cln_parse_op(Parser *parser){
         ast = _cln_parse_load(parser);
         _cln_match(parser, TOK_SEMI);
         return ast;
+    default:
+        break;
     }
     _cln_fail_with_unexpected_token(parser, parser->currentToken.tkind, TOK_IDENT);
     return ast;
@@ -159,3 +168,34 @@ static Ast* _cln_parse_block(Parser *parser){
     _cln_match(parser, TOK_RBRACE);
     return ast;
 }
+
+// -*-
+static Ast* _cln_parse_array_indexing(Parser *parser){
+    Object *ident = _cln_match(parser, TOK_IDENT);
+    _cln_match(parser, TOK_LSBRACKET); // [
+    Ast *index = _cln_parse_expr(parser);
+    _cln_match(parser, TOK_RSBRACKET);
+    //! @todo : we should check that "index is integer object"
+    Ast *ast = cln_new_ast(AST_INDEX, ident);
+    cln_ast_add_node(ast, index);
+    return ast;
+}
+
+// static Ast* _cln_parse_field(Parser *parser);
+// static Ast* _cln_parse_assign(Parser *parser);
+// static Ast* _cln_parse_print(Parser *parser);
+// static Ast* _cln_parse_def(Parser *parser);
+// static Ast* _cln_parse_while(Parser *parser);
+// static Ast* _cln_parse_condition(Parser *parser);
+// static Ast* _cln_parse_logical_expr(Parser *parser);
+// static Ast* _cln_parse_call(Parser *parser);
+// static Ast* _cln_parse_arglist(Parser *parser);
+// static Ast* _cln_parse_expr(Parser *parser);
+// static Ast* _cln_parse_artith_expr(Parser *parser);
+// static Ast* _cln_parse_term(Parser *parser);
+// static Ast* _cln_parse_value(Parser *parser);
+// static Ast* _cln_parse_return(Parser *parser);
+// static Ast* _cln_parse_array(Parser *parser);
+// static Ast* _cln_parse_object(Parser *parser);
+// static Ast* _cln_parse_import(Parser *parser);
+// static Ast* _cln_parse_load(Parser *parser);
