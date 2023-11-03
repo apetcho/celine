@@ -33,6 +33,16 @@ static void _cln_advance(Parser *parser){
 }
 
 // match()
+static Object* _cln_match(Parser *parser, int expectToken){
+    if(parser->currentToken.tkind != expectToken){
+        _cln_fail_with_unexpected_token(
+            parser, parser->currentToken.tkind, expectToken
+        );
+    }
+    Object *obj = parser->currentToken.obj;
+    _cln_advance(parser);
+    return obj;
+}
 // 
 
 // -*-
