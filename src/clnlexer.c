@@ -182,6 +182,10 @@ static bool _cln_is_ident_symbol(char c){
 }
 
 // ::is_number()
+static bool _cln_is_number_symbol(char c){
+    return isdigit(c) || c == '.' || c == 'e' || c == '+' || c == '-';
+}
+
 // read_ident()
 // is_not_string_end()
 // read_string_literal()
