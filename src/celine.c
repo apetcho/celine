@@ -304,4 +304,7 @@ void cln_env_update(Env *env, int id, Object *obj){
     env->idents[id] = obj;
 }
 
-void cln_env_put(Env *env, int id, Object *obj);
+// -*-
+void cln_env_put(Env *env, int id, Object *obj){
+    env->idents[id] = obj;
+}
