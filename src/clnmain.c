@@ -232,7 +232,31 @@ static Object* _cln_eval_expr(Ast *ast, Env *env, Symtable *symtable){
 }
 
 // -*- void _cln_eval_assign()
-static void _cln_eval_assign(Ast *ast, Env *env, int local, Symtable *symtable);
+static void _cln_eval_assign(Ast *ast, Env *env, int local, Symtable *symtable){
+    Ast *lhs = ast->node;
+    int i = lhs->obj->val.integer;
+    Object *self = _cln_eval_expr(lhs->next, env, symtable);
+    Object *index;
+    Object **item;
+    switch(lhs->akind){
+    case AST_IDENT:
+        if(local){ cln_env_put(env, i, self); }
+        else{
+            cln_env_update(env, i, self);
+        }
+        break;
+    case AST_INDEX:
+        item = _cln_resolve_index(lhs, env, symtable);
+        *item = self;
+        break;
+    case AST_FIELD:
+        _cln_eval_set_field(lhs, env, self);
+        break;
+    default:
+        cln_panic("CelineError: syntax error: %d\n", lhs->akind);
+        break;
+    }
+}
 
 // -*- void _cln_eval_statement()
 static void _cln_eval_statement(Ast *ast, Env *env, Symtable *symtable);
