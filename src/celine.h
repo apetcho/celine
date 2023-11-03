@@ -254,6 +254,7 @@ void cln_module_load(const char* name, Symtable *symbtable, Env *env);
     CLN_DEF(EOF, "eof")             \
     CLN_DEF(CALL, "call")           \
     CLN_DEF(PRINT, "print")         \
+    CLN_DEF(READ_INT, "readInt")    \
     CLN_DEF(INPUT, "input")         \
     CLN_DEF(STRING, "string")       \
     CLN_DEF(DEF, "def")             \
@@ -277,7 +278,7 @@ enum TokenKind{
 #undef CLN_DEF
 };
 
-extern char* clnTokenNames[];
+extern const char* clnTokenNames[];
 
 typedef struct{
     enum TokenKind tkind;
@@ -300,7 +301,7 @@ typedef struct {
 void cln_lexer_init(Lexer *lexer, const char *filename, Symtable *symtable);
 void cln_lexer_destroy(Lexer *lexer);
 Token cln_lexer_nextoken(Lexer *lexer);
-bool cln_lexer_has_nextotken(Lexer *lexer);
+// bool cln_lexer_has_nextotken(Lexer *lexer);
 
 // -*---------------------------------------------------------------*-
 // -*- Parser                                                      -*-
