@@ -162,6 +162,20 @@ static void _cln_clear_token(Lexer *lexer){
 }
 
 // readSymbols()
+static void _cln_read_symbol(Lexer *lexer, bool (*testfn)(char)){
+    _cln_clear_token(lexer);
+    int idx = 0;
+    char c;
+    do{
+        c = _cln_nextchar(lexer);
+        if(!testfn(c)){ break; }
+        lexer->token[idx++] = c;
+        _cln_advance_pos(lexer);
+    }while(idx < CLN_MAX_TOKLEN);
+    lexer->token[idx] = '\0';
+
+}
+
 // is_ident_symbol()
 // ::is_number()
 // read_ident()

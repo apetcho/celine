@@ -291,7 +291,7 @@ typedef struct {
     char buffer[CLN_BUFSIZE];       // stream_buffer
     char token[CLN_MAX_TOKLEN];     // token_buffer
     Symtable *symtable;             // id_table
-    uint32_t pos;                   // head
+    uint32_t pos;                   // head | column
     uint32_t offset;                // abolute_head_position;
     size_t bufsize;                 // buffer_size
     uint32_t lineno;                // line_num;
