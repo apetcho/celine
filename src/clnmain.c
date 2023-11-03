@@ -1,5 +1,5 @@
 #include<assert.h>
-
+#include<errno.h>
 #include "celine.h"
 
 #define CLN_EVALOP(op)                                      \
@@ -96,8 +96,29 @@ static Object* _cln_eval_def(Ast *ast){
     return cln_new_fun(fargs, argc, ast->node->next);
 }
 
+// -*-
+static void _cln_readlong(long *num){
+    char buf[64];
+    fgets(buf, sizeof(buf), stdin);
+    char *ptr;
+    *num = strtol(buf, &ptr, 10);
+    if(errno == EINVAL || errno==ERANGE){
+        cln_panic("CelineError: error reading number from standard input\n");
+    }
+    return;
+}
+
+
+
 // -*- Object* _cln_eval_expr()
-static Object* _cln_eval_expr(Ast *ast, Env *env, Symtable *symtable);
+static Object* _cln_eval_expr(Ast *ast, Env *env, Symtable *symtable){
+    Object *lhs;
+    Object *rhs;
+    Object *self;
+    Object *index;
+    Object *len;
+    long inum;
+}
 
 // -*- void _cln_eval_assign()
 static void _cln_eval_assign(Ast *ast, Env *env, int local, Symtable *symtable);
