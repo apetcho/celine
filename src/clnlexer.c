@@ -119,6 +119,21 @@ static char _cln_nextchar(Lexer *lexer){
 }
 
 // nextchar_and_advance()
+static char _cln_nextchar_and_advance(Lexer *lexer){
+    char c = _cln_nextchar(lexer);
+    if(lexer->pos == lexer->bufsize){
+        if(feof(lexer->stream)){
+            return CLN_EOF;
+        }else{
+            lexer->bufsize = fread(lexer->buffer, sizeof(char), CLN_BUFSIZE, lexer->stream);
+            lexer->pos = 0;
+        }
+    }
+    ++lexer->pos;
+    ++lexer->offset;
+    return c;
+}
+
 // advance_(head|pos)()
 // skip_whitespace()
 // clear_(token|tokenBuffer)()
