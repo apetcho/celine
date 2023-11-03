@@ -343,7 +343,17 @@ static Ast* _cln_parse_if(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_call(Parser *parser){}
+// -*- fname(args)
+static Ast* _cln_parse_call(Parser *parser){
+    Object *ident = _cln_match(parser, TOK_IDENT);  // fname
+    Ast *fun = cln_new_ast(AST_CALL, ident);
+    _cln_match(parser, TOK_LPAREN);                 // (
+    Ast *args = _cln_parse_arglist(parser);          // args
+    _cln_match(parser, TOK_RPAREN);                 // )
+    cln_ast_add_node(fun, args);
+    return fun;
+}
+
 // static Ast* _cln_parse_arglist(Parser *parser);
 // static Ast* _cln_parse_expr(Parser *parser);
 // static Ast* _cln_parse_artith_expr(Parser *parser);
