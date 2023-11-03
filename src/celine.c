@@ -180,5 +180,21 @@ void cln_set_field(Object *self, const char* name, Object *obj){
     self->fields[index] = field;
 }
 
+// -*-
+Object* cln_get_field_generic(Object *self, const char* name, bool checkproto){
+    uint32_t index = _cln_get_field_index(self, name);
+    if(self->fields[index]){
+        return self->fields[index]->obj;
+    }
+
+    if(checkproto){
+        Object *proto = cln_get_field_generic(self, CLN_PROTOTYPE, 0);
+        if(proto){
+            return cln_get_field_generic(proto, name, checkproto);
+        }
+    }
+
+    return NULL;
+}
+
 Object* cln_get_field(Object *self, const char* name);
-Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
