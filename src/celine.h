@@ -176,7 +176,7 @@ struct ast{
     enum AstKind akind;
     Object *obj;
     // -
-    Ast *first;
+    Ast *node;
     Ast *next;
     Ast *parent;
 };
@@ -184,7 +184,7 @@ struct ast{
 extern char* clnAstKindNames[];
 
 Ast* cln_new_ast(enum AstKind, Object *obj);
-void cln_ast_add_node(Ast *self, Ast *node);
+void cln_ast_add_node(Ast *parent, Ast *node);
 void cln_dump(Ast *ast);
 
 // -*---------------------------------------------------------------*-

@@ -217,12 +217,26 @@ Ast* cln_new_ast(enum AstKind akind, Object *obj){
     Ast *ast = (Ast*)cln_alloc(sizeof(Ast));
     ast->akind = akind;
     ast->obj = obj;
-    ast->first = NULL;
+    ast->node = NULL;
     ast->next = NULL;
     ast->parent = NULL;
 
     return ast;
 }
 
-void cln_ast_add_node(Ast *self, Ast *node);
+// -*-
+void cln_ast_add_node(Ast *parent, Ast *node){
+    Ast *self = parent->node;
+    self->parent = parent;
+    if(!self){
+        parent->node = node;
+        return;
+    }
+    while(self->next){
+        self = self->next;
+    }
+    self->next = node;
+}
+
+// -*-
 void cln_dump(Ast *ast);
