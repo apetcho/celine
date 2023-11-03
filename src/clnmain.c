@@ -98,7 +98,7 @@ static Object* _cln_eval_def(Ast *ast){
 
 // -*-
 static void _cln_readlong(long *num){
-    char buf[64];
+    char buf[64] = {0};
     fgets(buf, sizeof(buf), stdin);
     char *ptr;
     *num = strtol(buf, &ptr, 10);
@@ -108,6 +108,17 @@ static void _cln_readlong(long *num){
     return;
 }
 
+// -*-
+static void _cln_readfloat(double *num){
+    char buf[64] = {0};
+    fgets(buf, sizeof(buf), stdin);
+    char *ptr;
+    *num = strtod(buf, &ptr);
+    if(errno==ERANGE){
+        cln_panic("CelineError: error reading number from standard input\n");
+    }
+    return;
+}
 
 
 // -*- Object* _cln_eval_expr()
