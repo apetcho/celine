@@ -323,7 +323,27 @@ static Ast* _cln_parse_logical_expr(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_call(Parser *parser);
+// -*- if (cond) {}
+static Ast* _cln_parse_if(Parser *parser){
+    _cln_match(parser, TOK_IF);                     // if
+    Ast *ast = cln_new_ast(AST_IF, CLN_NONE);
+    _cln_match(parser, TOK_LPAREN);                 // (
+    Ast *cond = _cln_parse_condition(parser);       // cond
+    _cln_match(parser, TOK_RPAREN);                 // )
+    Ast *body = _cln_parse_block(parser);           // { body }
+    cln_ast_add_node(ast, cond);
+    cln_ast_add_node(ast, body);
+    // - else{ body}
+    if(parser->currentToken.tkind == TOK_ELSE){
+        _cln_match(parser, TOK_ELSE);
+        Ast *alt = _cln_parse_block(parser);
+        cln_ast_add_node(ast, alt);
+    }
+
+    return ast;
+}
+
+// static Ast* _cln_parse_call(Parser *parser){}
 // static Ast* _cln_parse_arglist(Parser *parser);
 // static Ast* _cln_parse_expr(Parser *parser);
 // static Ast* _cln_parse_artith_expr(Parser *parser);
