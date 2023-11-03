@@ -98,7 +98,7 @@ struct object{
             int narg;
             int *args;
             Ast *code;
-        };
+        } fun;
     }val;               // v
     Field **fields;
     size_t ftcap;       // field_table_length
@@ -116,7 +116,7 @@ char* cln_toString(const Object *self);
 Object* cln_new_integer(long num);
 Object* cln_new_float(double num);
 Object* cln_new_string(char *cstr);
-Object* cln_new_builtin(int *args, int narg, Ast *code);
+Object* cln_new_fun(int *args, int narg, Ast *code);
 Object* cln_new_array(size_t len);
 Object* cln_new();
 uint32_t cln_hash(const char* cstr, size_t tableLen);

@@ -92,7 +92,17 @@ Object* cln_new_string(char *cstr){
     return self;
 }
 
-Object* cln_new_builtin(int *args, int narg, Ast *code);
+// -*-
+Object* cln_new_fun(int *args, int narg, Ast *code){
+    Object *self = cln_new();
+    self->type = TY_FUN;
+    self->val.fun.narg = narg;
+    self->val.fun.args = args;
+    self->val.fun.code = code;
+
+    return self;
+}
+
 Object* cln_new_array(size_t len);
 uint32_t cln_hash(const char* cstr, size_t tableLen);
 void cln_set_field(Object *self, const char* name, Object *obj);
