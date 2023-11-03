@@ -160,7 +160,7 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
     CLN_DEF(IMPORT, "import")   \
     CLN_DEF(NEW, "new")         \
     CLN_DEF(LOAD, "load")       \
-    CLN_DEF(NONE, "none")
+    CLN_DEF(NONE, "_none_")
 
 // -*-
 enum AstKind {
@@ -174,7 +174,7 @@ enum AstKind {
 // -*-
 struct ast{
     enum AstKind akind;
-    Object *self;
+    Object *obj;
     // -
     Ast *first;
     Ast *next;
@@ -183,7 +183,7 @@ struct ast{
 
 extern char* clnAstKindNames[];
 
-Ast cln_new_ast(enum AstKind, Object *obj);
+Ast* cln_new_ast(enum AstKind, Object *obj);
 void cln_ast_add_node(Ast *self, Ast *node);
 void cln_dump(Ast *ast);
 

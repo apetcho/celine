@@ -201,3 +201,28 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto){
 Object* cln_get_field(Object *self, const char* name){
     return cln_get_field_generic(self, name, true);
 }
+
+// -*---------------------------------------------------------------*-
+// -*- Ast                                                         -*-
+// -*---------------------------------------------------------------*-
+
+char* clnAstKindNames[] = {
+#define CLN_DEF(kind, name)     name,
+    CLN_AST_NODES
+#undef CLN_DEF
+};
+
+// -*-
+Ast* cln_new_ast(enum AstKind akind, Object *obj){
+    Ast *ast = (Ast*)cln_alloc(sizeof(Ast));
+    ast->akind = akind;
+    ast->obj = obj;
+    ast->first = NULL;
+    ast->next = NULL;
+    ast->parent = NULL;
+
+    return ast;
+}
+
+void cln_ast_add_node(Ast *self, Ast *node);
+void cln_dump(Ast *ast);
