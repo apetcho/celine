@@ -493,7 +493,17 @@ static Ast* _cln_parse_return(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_array(Parser *parser);
+// -*- array[3]
+static Ast* _cln_parse_array(Parser *parser){
+    _cln_match(parser, TOK_ARRAY);
+    _cln_match(parser, TOK_LSBRACKET);
+    Ast *len = _cln_parse_expr(parser);
+    _cln_match(parser, TOK_RSBRACKET);
+    Ast *ast = cln_new_ast(AST_ARRAY, CLN_NONE);
+    cln_ast_add_node(ast, len);
+    return ast;
+}
+
 // static Ast* _cln_parse_object(Parser *parser);
 // static Ast* _cln_parse_import(Parser *parser);
 // static Ast* _cln_parse_load(Parser *parser);
