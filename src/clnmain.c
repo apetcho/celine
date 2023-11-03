@@ -24,7 +24,32 @@ static void _cln_narg_error(Object *fun){
 }
 
 // -*- Object* _cln_eval_call()
-static Object* _cln_eval_call(Env* env, Object *fun, Ast* arglist, Object *owner, Symtable *symtable);
+static Object* _cln_eval_call(Env* env, Object *fun, Ast* arglist, Object *owner, Symtable *symtable){
+    int narg = 0;
+    cln_checktype(fun, TY_FUN);
+    Env *local = cln_new_env();
+    local->parent = env;
+    Object **args = (Object**)cln_alloc(sizeof(Object*)*fun->val.fun.narg);
+    for(Ast *arg = arglist->next; arg; arg = arg->next){
+        if(narg==fun->val.fun.narg){
+            _cln_narg_error(fun);
+        }
+        args[narg++] = _cln_eval_expr(arg, env, symtable);
+    }
+    if(narg < fun->val.fun.narg){
+        _cln_narg_error(fun);
+    }
+    for(narg=0; narg < fun->val.fun.narg; ++narg){
+        cln_env_put(local, fun->val.fun.args[narg], args[narg]);
+    }
+    cln_env_put(local, CLN_RETURN_ID, NULL);
+    cln_env_put(local, CLN_SELF_ID, owner);
+    cln_eval(fun->val.fun.code, local, symtable);
+    Object *result = local->idents[CLN_RETURN_ID];
+    cln_dealloc(args);
+    cln_dealloc(local);
+    return result;
+}
 
 // -*- Object** _cln_resolve_index()
 static Object** _cln_resolve_index(Ast *ast, Env *env, Symtable *symtable);
