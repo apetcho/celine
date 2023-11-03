@@ -135,6 +135,11 @@ static char _cln_nextchar_and_advance(Lexer *lexer){
 }
 
 // advance_(head|pos)()
+static void _cln_advance_pos(Lexer *lexer){
+    ++lexer->pos;
+    ++lexer->offset;
+}
+
 // skip_whitespace()
 // clear_(token|tokenBuffer)()
 // readSymbols()
