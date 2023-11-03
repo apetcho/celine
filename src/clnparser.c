@@ -20,6 +20,10 @@ static void _cln_fail_with_unexpected_token(Parser *parser, int got, int needed)
 }
 
 // fail_with_parsing_error()
+void _cln_fail_with_parsing_error(const char *message){
+    cln_panic("CelineError: parsing error: %s\n", message);
+}
+
 // advance()
 // match()
 // 
