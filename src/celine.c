@@ -261,3 +261,19 @@ static void _cln_dump_with_indent(Ast *ast, uint32_t indent){
 void cln_dump(Ast *ast){
     _cln_dump_with_indent(ast, 0);
 }
+
+// -*---------------------------------------------------------------*-
+// -*- Env                                                         -*-
+// -*---------------------------------------------------------------*-
+// -*-
+Env* cln_new_env(){
+    Env *env = (Env*)cln_alloc(sizeof(Env));
+    memset(env->idents, 0, sizeof(Object*)*CLN_MAX_IDENT);
+    env->parent = NULL;
+    return env;
+}
+
+bool cln_env_contains(Env *env, int id);
+Object* cln_env_get(Env *env, int id);
+void cln_env_update(Env *env, int id, Object *obj); // set
+void cln_env_put(Env *env, int id, Object *obj);
