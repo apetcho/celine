@@ -16,7 +16,12 @@
 static Object* _cln_eval_expr(Ast *ast, Env *env, Symtable *symtable);
 
 // -*- void _cln_narg_error()
-static void _cln_narg_error(Object *fun);
+static void _cln_narg_error(Object *fun){
+    cln_panic(
+        "CelineError: invalid number of arguments passed to function: expected %d\n",
+        fun->val.fun.narg
+    );
+}
 
 // -*- Object* _cln_eval_call()
 static Object* _cln_eval_call(Env* env, Object *fun, Ast* arglist, Object *owner, Symtable *symtable);
