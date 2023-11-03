@@ -335,13 +335,42 @@ void cln_module_addpath(const char* name){
 }
 
 // -*-
-bool _cln_path_exists(const char* fname){
+bool _cln_file_exists(const char* fname){
     FILE *stream = fopen(fname, "r");
     if(!stream){
         return false;
     }
     fclose(stream);
     return true;
+}
+
+// -*-
+static char* _cln_find_module(const char* name){
+    char moduleFilename[CLN_PATHLEN];
+    char buffer[CLN_PATHLEN];
+    bool found = false;
+    for(Path *node = clnModules.paths; node; node = node->next){
+        strcpy(buffer, node->name);     // dirname
+        strcat(buffer, name);           // filename
+        if(_cln_file_exists(buffer)){
+            if(found){
+                cln_panic(
+                    "Ambiguous module name: %s\n"
+                    "Found at %s\n"
+                    "Found at %s\n",
+                    name, buffer, moduleFilename
+                );
+            }
+            strcpy(moduleFilename, buffer);
+            found = true;
+        }
+    }
+
+    if(!found){
+        cln_panic("CelineError: module not found: %s\n", name);
+    }
+
+    return strdup(moduleFilename);
 }
 
 Ast* cln_module_import(const char* name, Symtable* symtable);
