@@ -155,11 +155,11 @@ static Object* _cln_eval_expr(Ast *ast, Env *env, Symtable *symtable){
     case AST_IDENT:
         return cln_env_get(env, ast->obj->val.integer);
     case AST_READ_INT:
-        printf("cln>> ");
+        printf("icln>> ");
         _cln_readlong(&inum);
         return cln_new_integer(inum);
     case AST_INPUT:
-        printf("cln>> ");
+        printf("icln>> ");
         _cln_readstring(&str);
         return cln_new_string(str);
     case AST_ARRAY:
@@ -259,7 +259,79 @@ static void _cln_eval_assign(Ast *ast, Env *env, int local, Symtable *symtable){
 }
 
 // -*- void _cln_eval_statement()
-static void _cln_eval_statement(Ast *ast, Env *env, Symtable *symtable);
+static void _cln_eval_statement(Ast *ast, Env *env, Symtable *symtable){
+    Object *self;
+    Object *cond;
+    char *repr;
+    int* fargs;
+    int argc;
+    Ast *args;
+
+    switch(ast->akind){
+    case AST_ASSIGN:
+    case AST_LOCAL:
+        _cln_eval_assign(ast, env, ast->akind==AST_LOCAL, symtable);
+        break;
+    case AST_WHILE:
+        while(_cln_eval_expr(ast->node, env, symtable)->val.integer){
+            _cln_eval_statement(ast->node->next, env, symtable);
+        }
+        break;
+    case AST_IF:
+        cond = _cln_eval_expr(ast->node, env, symtable);
+        if(cond->val.integer){
+            _cln_eval_statement(ast->node->next, env, symtable);
+        }else if(ast->node->next->next){
+            _cln_eval_statement(ast->node->next->next, env, symtable);
+        }
+        break;
+    case AST_PRINT:
+        self = _cln_eval_expr(ast->node, env, symtable);
+        repr = cln_toString(self);
+        printf("\n%s\n", repr);
+        cln_dealloc(repr);
+        break;
+    case AST_RETURN:
+        cln_env_put(env, CLN_RETURN_ID, _cln_eval_expr(ast->node, env, symtable));
+        break;
+    case AST_DEF:
+        cln_env_put(env, ast->obj->val.integer, _cln_eval_def(ast));
+        break;
+    case AST_CALL:
+        _cln_eval_call(
+            env, cln_env_get(env, ast->obj->val.integer),
+            ast->node, NULL, symtable
+        );
+        break;
+    case AST_MCALL:
+        _cln_eval_call(
+            env, _cln_eval_get_field(ast->node, env),
+            ast->node->next, ast->node->obj, symtable
+        );
+        break;
+    case AST_EMPTY:
+        cln_eval(ast->node, env, symtable);
+        break;
+    case AST_IMPORT:{
+            Object *filename = ast->obj;
+            cln_checktype(filename, TY_STRING);
+            Ast* module = cln_module_import(
+                filename->val.cstr, symtable
+            );
+            cln_eval(module, env, symtable);
+        }//
+        break;
+    case AST_LOAD:{
+            Object *self = ast->obj;
+            cln_checktype(self, TY_STRING);
+            cln_module_load(self->val.cstr, symtable, env);
+        }//
+        break;
+    default:
+        fprintf(stderr, "CelineError: syntax error: %s\n", clnAstKindNames[ast->akind]);
+        break;
+    }
+}
 
 // -*-
 void cln_eval(Ast *ast, Env *env, Symtable *symtable);
