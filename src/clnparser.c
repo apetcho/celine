@@ -99,11 +99,55 @@ static Ast* _cln_parse_program(Parser *parser){
 // -*-
 static Ast* _cln_parse_oplist(Parser *parser){
     Ast *ast = cln_new_ast(AST_EMPTY, CLN_NONE);
-    while(parser->currentToken.tkind != TOK_RBRACE){
+    while(parser->currentToken.tkind != TOK_RBRACE || parser->currentToken.tkind != TOK_EOF){ // XXX
         Ast *node = _cln_parse_op(parser);
         cln_ast_add_node(ast, node);
     }
 
+    return ast;
+}
+
+// -*-
+static Ast* _cln_parse_op(Parser *parser){
+    Ast *ast = NULL;
+    switch(parser->currentToken.tkind){
+    case TOK_LBRACE: // { ...
+        return _cln_parse_block(parser);
+    case TOK_IDENT: // ident | ident(...)
+        // assign, [eval], call
+        ast = (
+            parser->nextToken.tkind==TOK_LPAREN ?
+            _cln_parse_call(parser) :
+            _cln_parse_assign(parser)
+        );
+        _cln_match(parser, TOK_SEMI);
+        return ast;
+    case TOK_LOCAL: // local ...
+        ast = _cln_parse_assign(parser);
+        _cln_match(parser, TOK_SEMI);
+        return ast;
+    case TOK_WHILE:
+        return _cln_parse_while(parser);
+    case TOK_IF:
+        return _cln_parse_if(parser);
+    case TOK_DEF:
+        return _cln_parse_def(parser);
+    case TOK_RETURN: // return expr;
+        ast = _cln_parse_return(parser);
+        _cln_match(parser, TOK_SEMI);
+        return ast;
+    case TOK_PRINT: // print '(' ... ')'
+        ast = _cln_parse_print(parser);
+        _cln_match(parser, TOK_SEMI);
+        return ast;
+    case TOK_IMPORT: // import ...
+        return _cln_parse_import(parser);
+    case TOK_LOAD:
+        ast = _cln_parse_load(parser);
+        _cln_match(parser, TOK_SEMI);
+        return ast;
+    }
+    _cln_fail_with_unexpected_token(parser, parser->currentToken.tkind, TOK_IDENT);
     return ast;
 }
 
