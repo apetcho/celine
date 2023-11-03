@@ -138,7 +138,7 @@ static uint32_t _cln_get_field_index(Object *self, const char* fieldname){
 }
 
 // -
-static void _cln_reshash(Object *self){
+static void _cln_rehash(Object *self){
     size_t cap = self->ftcap;
     self->ftcap *= 2;
     Field **fields = self->fields;
@@ -157,6 +157,28 @@ static void _cln_reshash(Object *self){
     cln_dealloc(fields);
 }
 
-void cln_set_field(Object *self, const char* name, Object *obj);
+// -*-
+void cln_set_field(Object *self, const char* name, Object *obj){
+    /* rehash if the load factor is greater than 0.75 */
+    if(5*self->nfield > 3*self->ftcap){
+        _cln_rehash(self);
+    }
+    uint32_t index = _cln_get_field_index(self, name);
+    Field *field = (Field*)cln_alloc(sizeof(Field));
+    char* fname = (char*)cln_alloc(sizeof(char)*(strlen(name)+1));
+    strcpy(fname, name);
+    field->name = fname;
+    field->obj = obj;
+    if(!self->fields[index]){
+        ++self->nfield;
+    }else if(!obj){
+        --self->nfield;
+    }else{
+        cln_dealloc(self->fields[index]->name);
+        cln_dealloc(self->fields[index]);
+    }
+    self->fields[index] = field;
+}
+
 Object* cln_get_field(Object *self, const char* name);
 Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
