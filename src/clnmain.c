@@ -1,5 +1,6 @@
 #include<assert.h>
 #include<errno.h>
+#include<string.h>
 #include "celine.h"
 
 #define CLN_EVALOP(op)                                      \
@@ -99,7 +100,10 @@ static Object* _cln_eval_def(Ast *ast){
 // -*-
 static void _cln_readlong(long *num){
     char buf[64] = {0};
-    fgets(buf, sizeof(buf), stdin);
+    char *rv = fgets(buf, sizeof(buf), stdin);
+    if(rv == NULL){
+        cln_panic("CelineError: error reading number from standard input\n");
+    }
     char *ptr;
     *num = strtol(buf, &ptr, 10);
     if(errno == EINVAL || errno==ERANGE){
@@ -111,12 +115,27 @@ static void _cln_readlong(long *num){
 // -*-
 static void _cln_readfloat(double *num){
     char buf[64] = {0};
-    fgets(buf, sizeof(buf), stdin);
+    char *rv = fgets(buf, sizeof(buf), stdin);
+    if(rv == NULL){
+        cln_panic("CelineError: error reading number from standard input\n");
+    }
     char *ptr;
     *num = strtod(buf, &ptr);
     if(errno==ERANGE){
         cln_panic("CelineError: error reading number from standard input\n");
     }
+    return;
+}
+
+// -*-
+static void _cln_readstring(char **str){
+    char buf[256];
+    memset(buf, '\0', sizeof(buf));
+    char *rv = fgets(buf, sizeof(buf), stdin);
+    if(rv == NULL || errno==EBADF){
+        cln_panic("CelineError: error reading number from standard input\n");
+    }
+    *str = strdup(buf);
     return;
 }
 
