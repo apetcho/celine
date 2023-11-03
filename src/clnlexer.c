@@ -87,6 +87,16 @@ static void _cln_fail(Lexer *lexer, const char *message){
 }
 
 // fail_with_invalid_symbol()
+static void _cln_fail_with_invalid_symbol(Lexer *lexer, char expected, char got){
+    fprintf(
+        stderr, "CelineError: expected '%c', got '%c' at [%d]\n",
+        expected, got, lexer->offset
+    );
+    cln_lexer_destroy(lexer);
+    exit(EXIT_FAILURE);
+}
+
+
 void cln_lexer_init(Lexer *lexer, const char *filename, Symtable *symtable);
 // nextchar()
 // nextchar_and_advance()
