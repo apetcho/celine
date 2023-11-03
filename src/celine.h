@@ -303,7 +303,7 @@ typedef struct {
 
 void cln_lexer_init(Lexer *lexer, const char *filename, Symtable *symtable);
 void cln_lexer_destroy(Lexer *lexer);
-Token cln_lexer_nextoken(Lexer *lexer);
+Token cln_lexer_nexttoken(Lexer *lexer);
 // bool cln_lexer_has_nextotken(Lexer *lexer);
 
 // -*---------------------------------------------------------------*-

@@ -248,7 +248,7 @@ static void _cln_dump_with_indent(Ast *ast, uint32_t indent){
             printf(" ");
         }
         printf("%s", clnAstKindNames[node->akind]);
-        if(node->akind==AST_IDENT || node->akind==AST_CONST){
+        if(node->akind==AST_IDENT || node->akind==AST_INTEGER || node->akind==AST_FLOAT){
             char* repr = cln_toString(node->obj);
             printf("(%s)", repr);
             cln_dealloc(repr);

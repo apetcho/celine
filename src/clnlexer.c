@@ -220,7 +220,7 @@ enum TokenKind _cln_get_keyword_token(char *cstr){
 }
 
 // -*-
-Token cln_lexer_nextoken(Lexer *lexer){
+Token cln_lexer_nexttoken(Lexer *lexer){
     _cln_skip_whitespace(lexer);
     Token token;
     token.lineno = lexer->lineno;
@@ -312,5 +312,8 @@ Token cln_lexer_nextoken(Lexer *lexer){
     return token;
 }
 
-void cln_lexer_destroy(Lexer *lexer);
+// -*-
+void cln_lexer_destroy(Lexer *lexer){
+    fclose(lexer->stream);
+}
 // bool cln_lexer_has_nextotken(Lexer *lexer);
