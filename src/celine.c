@@ -68,7 +68,14 @@ Object* cln_new(){
     return self;
 }
 
-Object* cln_new_integer(long num);
+// -*-
+Object* cln_new_integer(long num){
+    Object *self = cln_new();
+    self->type = TY_INTEGER;
+    self->val.integer = num;
+    return self;
+}
+
 Object* cln_new_float(double num);
 Object* cln_new_string(char *cstr);
 Object* cln_new_builtin(int *args, int narg, Ast *code);
