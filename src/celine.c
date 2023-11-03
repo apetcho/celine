@@ -294,5 +294,14 @@ Object* cln_env_get(Env *env, int id){
     return NULL; // never reached
 }
 
-void cln_env_update(Env *env, int id, Object *obj); // set
+// -*- set
+void cln_env_update(Env *env, int id, Object *obj){
+    if(cln_env_contains(env, id)){
+        while(!env->idents[id]){
+            env = env->parent;
+        }
+    }
+    env->idents[id] = obj;
+}
+
 void cln_env_put(Env *env, int id, Object *obj);
