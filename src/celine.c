@@ -103,7 +103,17 @@ Object* cln_new_fun(int *args, int narg, Ast *code){
     return self;
 }
 
-Object* cln_new_array(size_t len);
+// -*-
+Object* cln_new_array(size_t len){
+    Object *self = cln_new();
+    self->type = TY_ARRAY;
+    self->val.array.len = len;
+    self->val.array.data = (Object**)cln_alloc(sizeof(Object*)*len);
+    cln_set_field(self, "len", cln_new_integer(len));
+    // ... OTHER API ...
+    return self;
+}
+
 uint32_t cln_hash(const char* cstr, size_t tableLen);
 void cln_set_field(Object *self, const char* name, Object *obj);
 Object* cln_get_field(Object *self, const char* name);
