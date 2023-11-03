@@ -238,5 +238,24 @@ void cln_ast_add_node(Ast *parent, Ast *node){
     self->next = node;
 }
 
+// -
+static void _cln_dump_with_indent(Ast *ast, uint32_t indent){
+    for(Ast *node = ast; node; node = node->next){
+        for(uint32_t i=0; i < indent; ++i){
+            printf(" ");
+        }
+        printf("%s", clnAstKindNames[node->akind]);
+        if(node->akind==AST_IDENT || node->akind==AST_CONST){
+            char* repr = cln_toString(node->obj);
+            printf("(%s)", repr);
+            cln_dealloc(repr);
+        }
+        printf("\n");
+        if(node->node){
+            _cln_dump_with_indent(node->node, indent+1);
+        }
+    }
+}
+
 // -*-
 void cln_dump(Ast *ast);
