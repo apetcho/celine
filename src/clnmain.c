@@ -85,7 +85,16 @@ static Object* _cln_eval_get_field(Ast *ast, Env *env){
 }
 
 // -*- Object* _cln_eval_def()
-static Object* _cln_eval_def(Ast*);
+static Object* _cln_eval_def(Ast *ast){
+    int* fargs = (int*)cln_alloc(sizeof(int)*CLN_BUILTIN_MAXARGS);
+    int argc = 0;
+    for(Ast* arg=ast->node; arg; arg = arg->next){
+        fargs[argc++] = arg->obj->val.integer;
+    }
+
+    assert(ast->node);
+    return cln_new_fun(fargs, argc, ast->node->next);
+}
 
 // -*- Object* _cln_eval_expr()
 static Object* _cln_eval_expr(Ast *ast, Env *env, Symtable *symtable);
