@@ -220,7 +220,17 @@ static Ast* _cln_parse_assign(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_print(Parser *parser);
+// -*- print '(' expr ')'
+static Ast* _cln_parse_print(Parser *parser){
+    _cln_match(parser, TOK_PRINT);          // print
+    _cln_match(parser, TOK_LBRACE);         // (
+    Ast *expr = _cln_parse_expr(parser);    // expr
+    _cln_match(parser, TOK_RBRACE);         // )
+    Ast *ast = cln_new_ast(AST_PRINT, CLN_NONE);
+    ast->node = expr;
+    return ast;
+}
+
 // static Ast* _cln_parse_def(Parser *parser);
 // static Ast* _cln_parse_while(Parser *parser);
 // static Ast* _cln_parse_condition(Parser *parser);
