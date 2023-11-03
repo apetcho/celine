@@ -7,8 +7,8 @@
 Symtable* cln_new_symtable(){
     Symtable *symtable = (Symtable*)cln_alloc(sizeof(Symtable));
     memset(symtable->symbols, 0, sizeof(char*)*CLN_MAX_NUMID);
-    symtable->symbols[CLN_RETURN_ID] = "__return__";
-    symtable->symbols[CLN_SELF_ID] = "self";
+    symtable->symbols[CLN_RETURN_ID] = "@return";
+    symtable->symbols[CLN_SELF_ID] = "@self";
     symtable->len = 2;
     return symtable;
 }

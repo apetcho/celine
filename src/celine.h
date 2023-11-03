@@ -131,7 +131,8 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
 #define CLN_AST_NODES           \
     CLN_DEF(ASSIGN, "=")        \
     CLN_DEF(IDENT, "ident")     \
-    CLN_DEF(CONST, "const")     \
+    CLN_DEF(INTEGER, "integer") \
+    CLN_DEF(FLOAT, "float")     \
     CLN_DEF(ADD, "+")           \
     CLN_DEF(SUB, "-")           \
     CLN_DEF(MUL, "*")           \
@@ -231,6 +232,8 @@ void cln_module_load(const char* name, Symtable *symbtable, Env *env);
     CLN_DEF(LBRACE, "{")            \
     CLN_DEF(RBRACE, "}")            \
     CLN_DEF(IDENT, "ident")         \
+    CLN_DEF(INTEGER, "integer")     \
+    CLN_DEF(FLOAT, "float")         \
     CLN_DEF(ASSIGN, "=")            \
     CLN_DEF(NUMBER, "const")        \
     CLN_DEF(SEMI, ";")              \

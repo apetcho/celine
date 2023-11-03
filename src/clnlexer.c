@@ -59,13 +59,15 @@ enum TokenKind clnKeywordsKind[] = {
 
 char clnDelimiters[] = {
     ';', '=', '+', '-', '*', '/',
-    '(', ')', '[', ']', ',', CLN_EOF
+    '(', ')', '[', ']', '{', '}',
+    ',', CLN_EOF
 };
 
 enum TokenKind clnDelimitersKind[] = {
     TOK_SEMI, TOK_ASSIGN, TOK_PLUS, TOK_MINUS,
     TOK_STAR, TOK_SLASH, TOK_LBRACE, TOK_RBRACE,
-    TOK_LSBRACKET, TOK_RSBRACKET, TOK_COMMA, TOK_EOF,
+    TOK_LSBRACKET, TOK_RSBRACKET, TOK_LBRACE,
+    TOK_RBRACE, TOK_COMMA, TOK_EOF,
 };
 
 // -*---------------------------------------------------------------*-
@@ -217,6 +219,98 @@ enum TokenKind _cln_get_keyword_token(char *cstr){
     return TOK_UNKNOWN;
 }
 
-Token cln_lexer_nextoken(Lexer *lexer);
+// -*-
+Token cln_lexer_nextoken(Lexer *lexer){
+    _cln_skip_whitespace(lexer);
+    Token token;
+    token.lineno = lexer->lineno;
+    char c = _cln_nextchar(lexer);
+    uint32_t pos = lexer->pos;
+    uint32_t offset = lexer->offset;
+
+    if(lexer->nextIsFieldName){
+        _cln_read_symbol_tillws(lexer);
+        char *str = (char*)cln_alloc(sizeof(char)*(strlen(lexer->token)+1));
+        strcpy(str, lexer->token);
+        token.tkind = TOK_FIELD;
+        token.obj = cln_new_string(str);
+        lexer->nextIsFieldName = false;
+    }else if(c=='_' || isalpha(c)){ // ident or keyword: [A-Za-b_]+[A-Za-b0-9_]*
+        _cln_read_symbol_tillws(lexer);
+        enum TokenKind tkind = _cln_get_keyword_token(lexer->token);
+        if(tkind == TOK_UNKNOWN){   // ident
+            uint32_t idx = cln_get_symbol_index(lexer->symtable, lexer->token);
+            token.tkind = tkind;
+            token.obj = cln_new_integer(idx);
+        }else{                      // keyword
+            token.tkind = tkind;
+        }
+    }else if(((c=='-'|| c=='+') && (isdigit(_cln_nextchar(lexer))))){ // number literal
+        lexer->pos = pos;
+        lexer->offset = offset;
+        _cln_read_number_literal(lexer);
+        char *end = strchr(lexer->token, '.');
+        if(end == NULL){
+            token.obj = cln_new_integer(atol(lexer->token));
+            token.tkind  = TOK_INTEGER;
+        }else{
+            char *ptr = NULL;
+            double num = strtod(lexer->token, &ptr);
+            token.obj = cln_new_float(num);
+            token.tkind = TOK_FLOAT;
+        }
+    }else if(c=='\"'){  // string literal
+        _cln_advance_pos(lexer);
+        _cln_read_string_literal(lexer);
+        char *str = (char*)cln_alloc(sizeof(char)*(strlen(lexer->token)+1));
+        strcpy(str, lexer->token);
+        token.tkind = TOK_STRING;
+        token.obj = cln_new_string(str);
+        _cln_advance_pos(lexer);
+    }else if(c=='='){ // = | ==
+        _cln_advance_pos(lexer);
+        c = _cln_nextchar_and_advance(lexer);
+        if(c == '='){
+            token.tkind = TOK_EQ;
+        }else{
+            token.tkind = TOK_ASSIGN;
+        }
+    }else if(c=='<'){
+        _cln_advance_pos(lexer);
+        c = _cln_nextchar_and_advance(lexer);
+        if(c=='='){
+            token.tkind = TOK_LE;
+        }else{
+            token.tkind = TOK_LT;
+        }
+    }else if(c=='>'){
+        _cln_advance_pos(lexer);
+        c = _cln_nextchar_and_advance(lexer);
+        if(c=='='){
+            token.tkind = TOK_GE;
+        }else{
+            token.tkind = TOK_GT;
+        }
+    }else if(c=='.'){ // field
+        _cln_advance_pos(lexer);
+        lexer->nextIsFieldName = true;
+        token.tkind = TOK_DOT;
+    }else{  // DELIMITER | OP
+        bool found = false;
+        for(int i=0; i < CLN_ARRAYLEN(clnDelimiters); ++i){
+            if(c==clnDelimiters[i]){
+                found = true;
+                _cln_advance_pos(lexer);
+                token.tkind = clnDelimitersKind[i];
+            }
+        }
+        if(!found){
+            _cln_fail_with_invalid_symbol(lexer, '?', c);
+        }
+    }
+
+    return token;
+}
+
 void cln_lexer_destroy(Lexer *lexer);
 // bool cln_lexer_has_nextotken(Lexer *lexer);
