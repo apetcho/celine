@@ -291,7 +291,38 @@ static Ast* _cln_parse_condition(Parser *parser){
     }
 }
 
-// static Ast* _cln_parse_logical_expr(Parser *parser);
+// -*- <, >, <=, >=, ==,
+static Ast* _cln_parse_logical_expr(Parser *parser){
+    Ast *val = _cln_parse_value(parser);
+    Ast *ast = NULL;
+    switch(parser->currentToken.tkind){
+    case TOK_LT:
+        ast = cln_new_ast(AST_LT, CLN_NONE);
+        break;
+    case TOK_EQ:
+        ast = cln_new_ast(AST_EQ, CLN_NONE);
+        break;
+    case TOK_GT:
+        ast = cln_new_ast(AST_GT, CLN_NONE);
+        break;
+    case TOK_LE:
+        ast = cln_new_ast(AST_LE, CLN_NONE);
+        break;
+    case TOK_GE:
+        ast = cln_new_ast(AST_GE, CLN_NONE);
+        break;
+    default:
+        return val;
+    }
+
+    _cln_advance(parser);
+    Ast *rhs = _cln_parse_value(parser);
+    cln_ast_add_node(ast, val);
+    cln_ast_add_node(ast, rhs);
+
+    return ast;
+}
+
 // static Ast* _cln_parse_call(Parser *parser);
 // static Ast* _cln_parse_arglist(Parser *parser);
 // static Ast* _cln_parse_expr(Parser *parser);
