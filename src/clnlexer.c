@@ -96,8 +96,23 @@ static void _cln_fail_with_invalid_symbol(Lexer *lexer, char expected, char got)
     exit(EXIT_FAILURE);
 }
 
+// -*-
+void cln_lexer_init(Lexer *lexer, const char *filename, Symtable *symtable){
+    lexer->stream = NULL;
+    lexer->pos = 0;
+    lexer->offset = 0;
+    lexer->symtable = symtable;
+    memset(lexer->buffer, 0, sizeof(char)*CLN_BUFSIZE);
+    memset(lexer->token, 0, sizeof(char)*CLN_MAX_TOKLEN);
+    lexer->stream = fopen(filename, "r");
+    if(!lexer->stream){
+        _cln_fail(lexer, "Failed to open an input stream");
+    }
+    lexer->bufsize = fread(lexer->stream, sizeof(char), CLN_BUFSIZE, lexer->stream);
+    lexer->lineno = 1;
+    lexer->nextIsFieldName = false;
+}
 
-void cln_lexer_init(Lexer *lexer, const char *filename, Symtable *symtable);
 // nextchar()
 // nextchar_and_advance()
 // advance_(head|pos)()
