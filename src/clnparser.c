@@ -504,6 +504,18 @@ static Ast* _cln_parse_array(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_object(Parser *parser);
+// -*-
+static Ast* _cln_parse_object(Parser *parser){
+    if(parser->currentToken.tkind==TOK_OBJECT){
+        _cln_match(parser, TOK_OBJECT);
+        return cln_new_ast(AST_OBJECT, CLN_NONE);
+    }
+    _cln_match(parser, TOK_NEW);
+    Ast *ctor = _cln_parse_call(parser);
+    Ast *ast = cln_new_ast(AST_NEW, CLN_NONE);
+    cln_ast_add_node(ast, ctor);
+    return ast;
+}
+
 // static Ast* _cln_parse_import(Parser *parser);
 // static Ast* _cln_parse_load(Parser *parser);
