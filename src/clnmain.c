@@ -77,7 +77,12 @@ static void _cln_eval_set_field(Ast *ast, Env *env, Object *obj){
 }
 
 // -*- Object* _cln_eval_get_field()
-static Object* _cln_eval_get_field(Ast *ast, Env *env);
+static Object* _cln_eval_get_field(Ast *ast, Env *env){
+    int i = ast->obj->val.integer;
+    Object *self = cln_env_get(env, i);
+    cln_checktype(ast->node->obj, TY_STRING);
+    return cln_get_field(self, ast->node->obj->val.cstr);
+}
 
 // -*- Object* _cln_eval_def()
 static Object* _cln_eval_def(Ast*);
