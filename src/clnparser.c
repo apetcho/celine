@@ -181,7 +181,18 @@ static Ast* _cln_parse_array_indexing(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_field(Parser *parser);
+// -*- ident.ident === ident.field 
+static Ast* _cln_parse_field(Parser *parser){
+    Object *ident = _cln_match(parser, TOK_IDENT);
+    _cln_match(parser, TOK_DOT);
+    Object *field = _cln_match(parser, TOK_FIELD);
+    Ast *ast = cln_new_ast(AST_FIELD, ident);
+    //! @note: ORIGINAL :: cln_ast_add_node(ast, cln_new_ast(AST_CONSTANT, field));
+    //! @todo: cln_ast_add_node(ast, cln_new_ast(AST_SYMBOL, field));
+    cln_ast_add_node(ast, cln_new_ast(AST_IDENT, field));
+    return ast;
+}
+
 // static Ast* _cln_parse_assign(Parser *parser);
 // static Ast* _cln_parse_print(Parser *parser);
 // static Ast* _cln_parse_def(Parser *parser);
