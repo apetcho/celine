@@ -353,3 +353,27 @@ static char* _extract_folder(const char *path){
     *cursor = '\0';
     return result;
 }
+
+// -*---------------------------*-
+// -*-  M A I N   D R I V E R  -*-
+// -*---------------------------*-
+int main(int argc, char **argv){
+    if(argc < 2){
+        printf("usgae: %s filename\n", argv[0]);
+        cln_panic("CelineError: input file missing\n");
+    }
+
+    char *moduledir = _extract_folder(argv[1]);
+    printf("module directory of '%s': %s\n", argv[1], moduledir);
+    cln_module_addpath(moduledir);
+    cln_dealloc(moduledir);
+    cln_module_addpath("./");
+    Symtable *symtable = cln_new_symtable();
+    Ast *ast = cln_parse(argv[1], symtable);
+    cln_dump(ast);
+    Env *env = cln_new_env();
+    cln_eval(ast, env, symtable);
+    printf("\n");
+
+    return 0;
+}
