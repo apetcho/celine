@@ -273,7 +273,15 @@ Env* cln_new_env(){
     return env;
 }
 
-bool cln_env_contains(Env *env, int id);
+// -*-
+bool cln_env_contains(Env *env, int id){
+    if(env->idents[id]){
+        return true;
+    }
+
+    return env->parent ? cln_env_contains(env->parent, id) : false;
+}
+
 Object* cln_env_get(Env *env, int id);
 void cln_env_update(Env *env, int id, Object *obj); // set
 void cln_env_put(Env *env, int id, Object *obj);
