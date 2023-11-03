@@ -393,7 +393,25 @@ static Ast* _cln_parse_expr(Parser *parser){
     return NULL;
 }
 
-// static Ast* _cln_parse_arith_expr(Parser *parser);
+// -*-
+static Ast* _cln_parse_arith_expr(Parser *parser){
+    Ast* term = _cln_parse_term(parser);
+    if(parser->currentToken.tkind == TOK_PLUS){
+        _cln_match(parser, TOK_PLUS);
+        Ast *expr = cln_new_ast(AST_ADD, CLN_NONE);
+        cln_ast_add_node(expr, term);
+        cln_ast_add_node(expr, _cln_parse_arith_expr(parser));
+        return expr;
+    }else if(parser->currentToken.tkind == TOK_MINUS){
+        _cln_match(parser, TOK_MINUS);
+        Ast *expr = cln_new_ast(AST_SUB, CLN_NONE);
+        cln_ast_add_node(expr, term);
+        cln_ast_add_node(expr, _cln_parse_arith_expr(parser));
+        return expr;
+    }
+    return term;
+}
+
 // static Ast* _cln_parse_term(Parser *parser);
 // static Ast* _cln_parse_value(Parser *parser);
 // static Ast* _cln_parse_return(Parser *parser);
