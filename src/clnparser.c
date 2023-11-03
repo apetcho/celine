@@ -484,7 +484,15 @@ static Ast* _cln_parse_value(Parser *parser){
     return ast;
 }
 
-// static Ast* _cln_parse_return(Parser *parser);
+// -*-
+static Ast* _cln_parse_return(Parser *parser){
+    _cln_match(parser, TOK_RETURN);
+    Ast *ast = cln_new_ast(AST_RETURN, CLN_NONE);
+    Ast *expr = _cln_parse_expr(parser);
+    cln_ast_add_node(ast, expr);
+    return ast;
+}
+
 // static Ast* _cln_parse_array(Parser *parser);
 // static Ast* _cln_parse_object(Parser *parser);
 // static Ast* _cln_parse_import(Parser *parser);
