@@ -523,4 +523,8 @@ static Ast* _cln_parse_import(Parser *parser){
     return cln_new_ast(AST_IMPORT, _cln_match(parser, TOK_STRING));
 }
 
-// static Ast* _cln_parse_load(Parser *parser);
+// -*-
+static Ast* _cln_parse_load(Parser *parser){
+    _cln_match(parser, TOK_LOAD);
+    return cln_new_ast(AST_LOAD, _cln_match(parser, TOK_STRING));
+}
