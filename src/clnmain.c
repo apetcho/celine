@@ -339,3 +339,17 @@ void cln_eval(Ast *ast, Env *env, Symtable *symtable){
         _cln_eval_statement(node, env, symtable);
     }
 }
+
+// -*-
+static char* _extract_folder(const char *path){
+    const char *lastSlash = strrchr(path, '/');
+    char* result = (char*)cln_alloc(sizeof(char)*(strlen(path)+1));
+    const char* ptr = path;
+    char* cursor = result;
+    while(ptr != lastSlash){
+        *cursor++ = *ptr++;
+    }
+    *cursor++= '/';
+    *cursor = '\0';
+    return result;
+}
