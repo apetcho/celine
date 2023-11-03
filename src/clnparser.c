@@ -354,7 +354,21 @@ static Ast* _cln_parse_call(Parser *parser){
     return fun;
 }
 
-// static Ast* _cln_parse_arglist(Parser *parser);
+// -*-
+static Ast* _cln_parse_arglist(Parser *parser){
+    // - arg1, arg2, ...
+    Ast *args = cln_new_ast(AST_EMPTY, CLN_NONE);
+    while(parser->currentToken.tkind != TOK_RPAREN){
+        Ast *arg = _cln_parse_value(parser);
+        cln_ast_add_node(args, arg);
+        if(parser->currentToken.tkind != TOK_RPAREN){
+            _cln_match(parser, TOK_COMMA);
+        }
+    }
+
+    return args;
+}
+
 // static Ast* _cln_parse_expr(Parser *parser);
 // static Ast* _cln_parse_artith_expr(Parser *parser);
 // static Ast* _cln_parse_term(Parser *parser);
