@@ -148,6 +148,87 @@ static Object* _cln_eval_expr(Ast *ast, Env *env, Symtable *symtable){
     Object *index;
     Object *len;
     long inum;
+    double fnum;
+    int idx;
+    char *str = NULL;
+    switch(ast->akind){
+    case AST_IDENT:
+        return cln_env_get(env, ast->obj->val.integer);
+    case AST_READ_INT:
+        printf("cln>> ");
+        _cln_readlong(&inum);
+        return cln_new_integer(inum);
+    case AST_INPUT:
+        printf("cln>> ");
+        _cln_readstring(&str);
+        return cln_new_string(str);
+    case AST_ARRAY:
+        len = _cln_eval_expr(ast->node, env, symtable);
+        cln_checktype(len, TY_INTEGER);
+        return cln_new_array(len->val.integer);
+    case AST_OBJECT:
+        return cln_new();
+    case AST_INDEX:
+        return *_cln_resolve_index(ast, env, symtable);
+    case AST_FIELD:
+        self = _cln_eval_get_field(ast, env);
+        if(!self){
+            cln_panic("CelineError: unknown field: %s\n", ast->node->obj->val.cstr);
+        }
+        return self;
+    case AST_DEF:
+        return _cln_eval_def(ast);
+    case AST_CALL:
+        return _cln_eval_call(
+            env, cln_env_get(env, ast->obj->val.integer),
+            ast->node, NULL, symtable
+        );
+    case AST_NEW:{
+            Object *obj = cln_new();
+            Object *ctor = cln_env_get(env, ast->node->obj->val.integer);
+            _cln_eval_call(env, ctor, ast->node->node, obj, symtable);
+            cln_set_field(obj, CLN_PROTOTYPE, cln_get_field_generic(ctor, CLN_PROTOTYPE, false));
+            return obj;
+        }//
+    case AST_MCALL:
+        return _cln_eval_call(
+            env, _cln_eval_get_field(ast, env),
+            ast->node->next, cln_env_get(env, ast->node->obj->val.integer),
+            symtable
+        );
+    case AST_ADD:
+        CLN_EVALOP(+);
+    case AST_SUB:
+        CLN_EVALOP(-);
+    case AST_MUL:
+        CLN_EVALOP(*);
+    case AST_DIV:
+        CLN_EVALOP(/);
+    case AST_AND:
+        CLN_EVALOP(&&);
+    case AST_OR:
+        CLN_EVALOP(||);
+    case AST_NOT:
+        self = _cln_eval_expr(ast->node, env, symtable);
+        cln_checktype(self, TY_INTEGER);
+        return cln_new_integer((long)(!self->val.integer));
+    case AST_LT:
+        CLN_EVALOP(<);
+    case AST_EQ:
+        CLN_EVALOP(==);
+    case AST_GT:
+        CLN_EVALOP(>);
+    case AST_LE:
+        CLN_EVALOP(<=);
+    case AST_GE:
+        CLN_EVALOP(>=);
+    default:
+        fprintf(
+            stderr, "CelineError: unexpected syntax error: %s\n",
+            clnAstKindNames[ast->akind]
+        );
+        return NULL;
+    }
 }
 
 // -*- void _cln_eval_assign()
