@@ -151,4 +151,11 @@ static Ast* _cln_parse_op(Parser *parser){
     return ast;
 }
 
-//static Ast* _cln_parse_block(Parser *parser);
+// -*-
+static Ast* _cln_parse_block(Parser *parser){
+    // { ... }
+    _cln_match(parser, TOK_LBRACE);
+    Ast *ast = _cln_parse_oplist(parser);
+    _cln_match(parser, TOK_RBRACE);
+    return ast;
+}
