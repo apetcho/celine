@@ -47,10 +47,10 @@ static Object* _cln_match(Parser *parser, int expectToken){
 
 // -*-
 static Ast* _cln_parse_program(Parser *parser);
+static Ast* _cln_parse_oplist(Parser *parser);
 static Ast* _cln_parse_block(Parser *parser);
 static Ast* _cln_parse_condition(Parser *parser);
 static Ast* _cln_parse_logical_expr(Parser *parser);
-static Ast* _cln_parse_oplist(Parser *parser);
 static Ast* _cln_parse_op(Parser *parser);
 static Ast* _cln_parse_assign(Parser *parser);
 static Ast* _cln_parse_while(Parser *parser);
@@ -91,7 +91,20 @@ expr | statement
 ....
 */
 static Ast* _cln_parse_program(Parser *parser){
-    parser->nextToken = cln_lexer_nexttoken(parser->lexer);
-    _cln_advance(parser);
+    // parser->nextToken = cln_lexer_nexttoken(parser->lexer);
+    // _cln_advance(parser);
     return _cln_parse_oplist(parser);
 }
+
+// -*-
+static Ast* _cln_parse_oplist(Parser *parser){
+    Ast *ast = cln_new_ast(AST_EMPTY, CLN_NONE);
+    while(parser->currentToken.tkind != TOK_RBRACE){
+        Ast *node = _cln_parse_op(parser);
+        cln_ast_add_node(ast, node);
+    }
+
+    return ast;
+}
+
+//static Ast* _cln_parse_block(Parser *parser);

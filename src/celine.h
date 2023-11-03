@@ -161,7 +161,7 @@ Object* cln_get_field_generic(Object *self, const char* name, bool checkproto);
     CLN_DEF(IMPORT, "import")   \
     CLN_DEF(NEW, "new")         \
     CLN_DEF(LOAD, "load")       \
-    CLN_DEF(NONE, "_none_")
+    CLN_DEF(EMPTY, "@empty")
 
 // -*-
 enum AstKind {
